@@ -25,3 +25,24 @@ func (m *postgresDBRepo) InsertIntoShortUrlMap(shortURL, longURL string) error {
 
 	return nil
 }
+
+// GetLongUrlFromShort gets a long url from short
+func (m *postgresDBRepo) GetLongUrlFromShort(shortURL string) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var longURL string
+
+	query := `select long_url from short_url_map where short_url = $1`
+
+	row := m.DB.QueryRowContext(ctx, query, shortURL)
+	err := row.Scan(
+		&longURL,
+	)
+
+	if err != nil {
+		return "", err
+	}
+
+	return longURL, nil
+}

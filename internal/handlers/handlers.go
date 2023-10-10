@@ -87,11 +87,25 @@ func (m *Repository) ShortenURL(w http.ResponseWriter, r *http.Request) {
 // Redirect redirects the short URL to the original long URL.
 func (m *Repository) Redirect(w http.ResponseWriter, r *http.Request) {
 	shortKey := chi.URLParam(r, "shortKey")
-	longURL := "https://google.com/"
+	longURL, err := m.DB.GetLongUrlFromShort(shortKey)
+
+	if err != nil {
+		resp := jsonResponse{
+			OK:      false,
+			Message: "No URL Found for this link",
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		err := json.NewEncoder(w).Encode(resp)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
 
 	response := jsonResponse{
 		OK:       true,
-		Message:  "Short URL created",
+		Message:  "Short URL Found",
 		LongURL:  longURL,
 		ShortURL: shortKey,
 	}
