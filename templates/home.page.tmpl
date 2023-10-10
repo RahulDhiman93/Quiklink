@@ -12,49 +12,70 @@
 
     <style>
         body {
-            background-image: linear-gradient(45deg, #f8f9fa, #e9ecef);
-            padding: 40px;
+            background: linear-gradient(45deg, purple, orange);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
+
         .container {
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: white;
+            margin: 10px 10px 10px 10px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            animation: fadeIn 1s ease-in-out;
+            text-align: center;
         }
-        .input-group {
-            animation: slideIn 1s ease-in-out;
-        }
+
         h1 {
-            color: #007bff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            color: #4285f4;
+            font-size: 36px;
         }
-        button.btn-primary {
-            background-color: #007bff;
+
+        .input-group {
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            margin-right: 24px;
+            padding: 10px 15px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: #4285f4;
             border: none;
+            border-radius: 24px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
         }
-        button.btn-primary:hover {
-            background-color: #0056b3;
+
+        .btn-primary:hover {
+            background-color: #3579e5;
         }
-        #shortenedUrl {
-            color: #007bff;
-            font-weight: bold;
+
+        .shortened-url {
+            margin-top: 20px;
+            font-size: 20px;
         }
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-        @keyframes slideIn {
-            0% { transform: translateY(-20px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
+
+        a {
+            color: #4285f4;
+            text-decoration: none;
         }
     </style>
 
 </head>
 <body>
-<div class="container text-center">
-    <h1 class="mt-4">Quiklink</h1>
-    <p>Enter a big URL to get a shortened URL:</p>
+<div class="container">
+    <h1>Quiklink</h1>
+    <p>Enter a URL to get a shortened link:</p>
     <div class="input-group mb-3">
         <input type="text" id="originalUrl" class="form-control" placeholder="Enter URL" aria-label="Enter URL"
                aria-describedby="shortenButton">
@@ -62,9 +83,9 @@
             <button class="btn btn-primary" type="button" id="shortenButton">Shorten</button>
         </div>
     </div>
-    <p>Shortened URL:</p>
-    <p><a id="shortenedUrl" href="#" target="_blank"></a></p>
+    <p class="shortened-url"><a id="shortenedUrl" href="#" target="_blank"></a></p>
 </div>
+
 
 <!-- jQuery JS links for functionality -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -75,12 +96,18 @@
     document.getElementById("shortenButton").addEventListener("click", function () {
         const originalUrl = document.getElementById("originalUrl").value;
 
+        if (!isURL(originalUrl)) {
+            document.getElementById("originalUrl").value = "";
+            document.getElementById("shortenedUrl").href = "#!";
+            document.getElementById("shortenedUrl").textContent = "";
+            alert("Enter a valid URL");
+            return
+        }
+
         const url = '/shorten';
         const data = {
             long_url: originalUrl
         };
-
-        let shortKey = "";
 
         fetch(url, {
             method: 'POST',
@@ -91,8 +118,8 @@
         })
             .then(response => response.json())
             .then(data => {
-                shortKey = data["short_url"];
-                const shortenedUrl = "localhost:8080/" + shortKey;
+                let shortKey = data["short_url"];
+                const shortenedUrl = "http://localhost:8080/" + shortKey;
 
                 document.getElementById("shortenedUrl").href = shortenedUrl;
                 document.getElementById("shortenedUrl").textContent = shortenedUrl;
@@ -101,6 +128,14 @@
                 console.error('Error:', error);
             });
     });
+
+    function isURL(text) {
+        if (!text.includes("http") || !text.includes("https")) {
+            return false
+        }
+        const urlPattern = /^(https?:\/\/)?([\w.-]+)\.([a-zA-Z]{2,})(\S*)$/;
+        return urlPattern.test(text);
+    }
 </script>
 </body>
 </html>
