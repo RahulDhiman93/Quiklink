@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiklink</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+</head>
+<body>
+<div class="container text-center">
+    <h1 class="mt-4">Quiklink</h1>
+    <p>Enter a big URL to get a shortened URL:</p>
+    <div class="input-group mb-3">
+        <input type="text" id="originalUrl" class="form-control" placeholder="Enter URL" aria-label="Enter URL" aria-describedby="shortenButton">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="button" id="shortenButton">Shorten</button>
+        </div>
+    </div>
+    <p>Shortened URL:</p>
+    <p><a id="shortenedUrl" href="#" target="_blank"></a></p>
+</div>
+
+<!-- jQuery JS links for functionality -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    document.getElementById("shortenButton").addEventListener("click", function () {
+        const originalUrl = document.getElementById("originalUrl").value;
+        // Implement your URL shortening logic here and set the shortened URL in the next line
+        const shortenedUrl = "http://short.ly/abc123";
+
+        document.getElementById("shortenedUrl").href = shortenedUrl;
+        document.getElementById("shortenedUrl").textContent = shortenedUrl;
+    });
+</script>
+</body>
+</html>

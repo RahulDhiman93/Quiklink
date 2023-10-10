@@ -9,6 +9,7 @@ import (
 func routes() http.Handler {
 	mux := chi.NewRouter()
 
+	mux.Get("/", handlers.Repo.Home)
 	mux.Post("/shorten", handlers.Repo.ShortenURL)
 	mux.Get("/{shortKey:[a-zA-Z0-9]+}", handlers.Repo.Redirect)
 

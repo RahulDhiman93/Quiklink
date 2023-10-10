@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"Quiklink_BE/internal/driver"
+	"Quiklink_BE/internal/models"
+	"Quiklink_BE/internal/render"
 	"Quiklink_BE/internal/repository"
 	"Quiklink_BE/internal/repository/dbrepo"
 	"encoding/json"
@@ -34,6 +36,11 @@ type jsonResponse struct {
 	Message  string `json:"message"`
 	LongURL  string `json:"long_url"`
 	ShortURL string `json:"short_url"`
+}
+
+// Home is the home page handler
+func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
+	render.TemplateRenderer(w, r, "home.page.tmpl", &models.TemplateData{})
 }
 
 // ShortenURL generates a short key for a given URL and stores it in the map.
