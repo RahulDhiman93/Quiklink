@@ -1,0 +1,5 @@
+create_table("short_url_map") {
+  t.Column("id", "integer", {primary: true})
+  t.Column("short_url", "string", {"default": ""})
+  t.Column("long_url", "string", {"default": ""})
+}

@@ -5,7 +5,6 @@ import (
 	"Quiklink_BE/internal/repository"
 	"Quiklink_BE/internal/repository/dbrepo"
 	"encoding/json"
-	"fmt"
 	"github.com/go-chi/chi"
 	"math/rand"
 	"net/http"
@@ -49,9 +48,8 @@ func (m *Repository) ShortenURL(w http.ResponseWriter, r *http.Request) {
 			Message: "Internal server error",
 		}
 
-		out, _ := json.MarshalIndent(resp, "", "    ")
 		w.Header().Set("Content-Type", "application/json")
-		err := json.NewEncoder(w).Encode(out)
+		err := json.NewEncoder(w).Encode(resp)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
@@ -59,7 +57,21 @@ func (m *Repository) ShortenURL(w http.ResponseWriter, r *http.Request) {
 	}
 
 	shortKey := randomString(8)
-	fmt.Println(shortKey)
+
+	err := m.DB.InsertIntoShortUrlMap(shortKey, request.LongURL)
+	if err != nil {
+		resp := jsonResponse{
+			OK:      false,
+			Message: err.Error(),
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		err := json.NewEncoder(w).Encode(resp)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
 
 	response := jsonResponse{
 		OK:       true,
