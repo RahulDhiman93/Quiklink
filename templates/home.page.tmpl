@@ -119,7 +119,7 @@
             .then(response => response.json())
             .then(data => {
                 let shortKey = data["short_url"];
-                const shortenedUrl = "http://localhost:8080/" + shortKey;
+                const shortenedUrl = "https://ec2-18-144-176-134.us-west-1.compute.amazonaws.com/" + shortKey;
 
                 document.getElementById("shortenedUrl").href = shortenedUrl;
                 document.getElementById("shortenedUrl").textContent = shortenedUrl;
