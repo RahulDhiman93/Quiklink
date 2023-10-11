@@ -9,6 +9,7 @@ body {
 
 .container {
     background-color: white;
+    margin: 10px 10px 10px 10px;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -43,6 +44,20 @@ input[type="text"] {
 }
 
 .btn-primary:hover {
+    background-color: #3579e5;
+}
+
+.btn-secondary {
+    background-color: #4285f4;
+    border: none;
+    margin-left: 10px;
+    border-radius: 24px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
     background-color: #3579e5;
 }
 
