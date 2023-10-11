@@ -2,7 +2,7 @@
 
 ## Welcome to Quiklink!
 
-Quiklink is a powerful and elegant URL shortening tool that allows you to create concise and memorable links from long and unwieldy URLs. Whether you're sharing links on social media, through email, or simply want to make your web addresses more user-friendly, Quiklink is here to simplify and beautify your web experiences.
+Quiklink is a powerful and elegant URL-shortening tool that allows you to create concise and memorable links from long and unwieldy URLs. Whether you're sharing links on social media, through email, or simply want to make your web addresses more user-friendly, Quiklink is here to simplify and beautify your web experiences.
 
 ## Features
 
@@ -20,7 +20,7 @@ Quiklink is built with the following technologies:
 
 ## Usage
 
-Visit the [Quiklink website](https://ec2-18-144-176-134.us-west-1.compute.amazonaws.com/) and follow these simple steps:
+Visit the [Quiklink website](https://quiklink.site/) and follow these simple steps:
 
 1. Paste your long URL into the input field.
 2. Click the "Shorten" button.
