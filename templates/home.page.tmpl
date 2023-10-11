@@ -8,6 +8,8 @@
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 {{/*    <link rel="stylesheet" type="text/css" href="/static/css/main.css">*/}}
 
+    <link rel="icon" type="image/png" href="/static/images/quiklink.png">
+
     <title>Quiklink</title>
 
     <style>
@@ -60,6 +62,20 @@
             background-color: #3579e5;
         }
 
+        .btn-secondary {
+            background-color: #4285f4;
+            border: none;
+            margin-left: 10px;
+            border-radius: 24px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background-color: #3579e5;
+        }
+
         .shortened-url {
             margin-top: 20px;
             font-size: 20px;
@@ -83,7 +99,10 @@
             <button class="btn btn-primary" type="button" id="shortenButton">Shorten</button>
         </div>
     </div>
-    <p class="shortened-url"><a id="shortenedUrl" href="#" target="_blank"></a></p>
+    <p class="shortened-url">
+        <a id="shortenedUrl" href="#" target="_blank"></a>
+        <button class="btn btn-secondary" type="button" id="copyButton" style="display: none">Copy</button>
+    </p>
 </div>
 
 
@@ -95,8 +114,10 @@
 <script>
     document.getElementById("shortenButton").addEventListener("click", function () {
         const originalUrl = document.getElementById("originalUrl").value;
+        var copyButton = document.getElementById("copyButton");
 
         if (!isURL(originalUrl)) {
+            copyButton.style.display = "none"
             document.getElementById("originalUrl").value = "";
             document.getElementById("shortenedUrl").href = "#!";
             document.getElementById("shortenedUrl").textContent = "";
@@ -121,6 +142,7 @@
                 let shortKey = data["short_url"];
                 const shortenedUrl = "https://ec2-18-144-176-134.us-west-1.compute.amazonaws.com/" + shortKey;
 
+                copyButton.style.display = "inline"
                 document.getElementById("shortenedUrl").href = shortenedUrl;
                 document.getElementById("shortenedUrl").textContent = shortenedUrl;
             })
