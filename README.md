@@ -42,13 +42,9 @@ Contributions are welcome! Whether you want to report a bug, request a feature, 
 
 We'd love to hear from you. If you have any questions, or suggestions, or want to say hi, please don't hesitate to [contact](mailto:rahul-dhiman@outlook.com).
 
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
 ## Connect (Let's Chat)
 
-- GitHub: [https://github.com/RahulDhiman93/Quiklink](https://github.com/RahulDhiman93/Quiklink)
-- Website: [https://ec2-18-144-176-134.us-west-1.compute.amazonaws.com/](https://rahuldhiman93.github.io/Portfolio/)
+- GitHub: [Rahul Dhiman](https://github.com/RahulDhiman93/)
+- Website: [Rahul Dhiman](https://rahuldhiman93.github.io/Portfolio/)
 
 Thank you for using Quiklink. We hope you enjoy the elegance and simplicity it brings to your web experience!
