@@ -65,7 +65,8 @@
             .then(response => response.json())
             .then(data => {
                 let shortKey = data["short_url"];
-                const shortenedUrl = "https://ec2-18-144-176-134.us-west-1.compute.amazonaws.com/" + shortKey;
+                // const shortenedUrl = "https://ec2-18-144-176-134.us-west-1.compute.amazonaws.com/" + shortKey;
+                const shortenedUrl = "https://quiklink.site/" + shortKey;
 
                 copyButton.style.display = "inline"
                 document.getElementById("shortenedUrl").href = shortenedUrl;
