@@ -70,3 +70,65 @@ a {
     color: #4285f4;
     text-decoration: none;
 }
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding-bottom: 3rem;
+    font-size: 1.4rem;
+}
+
+footer a,
+footer a:visited {
+    color: #FFFFFF;
+}
+
+footer a:hover,
+footer a:focus {
+    color: #4285f4;
+}
+
+footer .row {
+    max-width: 100%;
+}
+
+footer .social {
+    text-align: right;
+}
+
+footer .footer-social {
+    display: inline-block;
+    font-size: 2.1rem;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    top: -.3rem;
+}
+
+footer .footer-social li {
+    display: inline-block;
+    margin: 0 12px;
+    padding: 0;
+}
+
+footer .footer-social li a {
+    color: #FFFFFF;
+}
+
+footer .copyright span {
+    display: inline-block;
+}
+
+footer .copyright span::after {
+    content: "|";
+    display: inline-block;
+    padding: 0 1rem 0 1.2rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+footer .copyright span:last-child::after {
+    display: none;
+}
