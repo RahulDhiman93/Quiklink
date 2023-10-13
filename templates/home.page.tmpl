@@ -56,7 +56,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+
 <script>
+    checkUrlForRedirection()
+
     document.getElementById("shortenButton").addEventListener("click", function () {
         const originalUrl = document.getElementById("originalUrl").value.toLowerCase();
         var copyButton = document.getElementById("copyButton");
@@ -130,6 +133,13 @@
             ctx.drawImage(image, 0, 0);
             canvasContainer.style.display = "block";
         };
+    }
+
+    function checkUrlForRedirection() {
+        {{$err := index .StringMap "url_not_found"}}
+        {{if eq $err "url_not_found"}}
+            alert("Unable to find the URL!!!");
+        {{end}}
     }
 </script>
 </body>

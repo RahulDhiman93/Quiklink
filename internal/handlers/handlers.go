@@ -111,7 +111,11 @@ func (m *Repository) Redirect(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil || longURL == "" {
 		log.Println(err)
-		_ = render.TemplateRenderer(w, r, "home.page.tmpl", &models.TemplateData{})
+		stringMap := make(map[string]string)
+		stringMap["url_not_found"] = "url_not_found"
+		_ = render.TemplateRenderer(w, r, "home.page.tmpl", &models.TemplateData{
+			StringMap: stringMap,
+		})
 		return
 	}
 
