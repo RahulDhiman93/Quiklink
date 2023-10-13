@@ -16,6 +16,16 @@ body {
     text-align: center;
 }
 
+.logo-and-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-and-title img {
+    margin-right: 10px;
+}
+
 h1 {
     color: #4285f4;
     font-size: 36px;
@@ -62,7 +72,7 @@ input[type="text"] {
 }
 
 .shortened-url {
-    margin-top: 20px;
+    margin-top: 10px;
     font-size: 20px;
 }
 
@@ -84,6 +94,12 @@ input[type="text"] {
     transform: scale(1);
 }
 
+#qrImageCanvas {
+    border: 2px solid #4285f4;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
 a {
     color: #4285f4;
     text-decoration: none;
@@ -91,12 +107,13 @@ a {
 
 footer {
     position: fixed;
+    margin-top: 2rem;
     left: 0;
     bottom: 0;
     width: 100%;
     text-align: center;
-    padding-bottom: 3rem;
-    font-size: 1.4rem;
+    padding-bottom: 1rem;
+    font-size: 1.0rem;
 }
 
 footer a,
@@ -143,7 +160,7 @@ footer .copyright span {
 footer .copyright span::after {
     content: "|";
     display: inline-block;
-    padding: 0 1rem 0 1.2rem;
+    padding: 0 0.5rem 0 0.7rem;
     color: rgba(255, 255, 255, 0.6);
 }
 
