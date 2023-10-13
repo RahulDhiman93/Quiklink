@@ -67,7 +67,7 @@
 
 <script>
     document.getElementById("shortenButton").addEventListener("click", function () {
-        const originalUrl = document.getElementById("originalUrl").value;
+        const originalUrl = document.getElementById("originalUrl").value.toLowerCase();
         var copyButton = document.getElementById("copyButton");
 
         if (!isURL(originalUrl)) {
