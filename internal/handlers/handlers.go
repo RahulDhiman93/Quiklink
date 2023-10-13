@@ -8,6 +8,8 @@ import (
 	"Quiklink_BE/internal/repository/dbrepo"
 	"encoding/json"
 	"github.com/go-chi/chi"
+	qrcode "github.com/skip2/go-qrcode"
+	"log"
 	"math/rand"
 	"net/http"
 	"time"
@@ -36,6 +38,7 @@ type jsonResponse struct {
 	Message  string `json:"message"`
 	LongURL  string `json:"long_url"`
 	ShortURL string `json:"short_url"`
+	QRCode   []byte `json:"qrcode"`
 }
 
 // Home is the home page handler
@@ -80,11 +83,21 @@ func (m *Repository) ShortenURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//shortUrl := "http://localhost:8080/" + shortKey //DEV
+	//shortUrl := "https://ec2-18-144-176-134.us-west-1.compute.amazonaws.com/" + shortKey //REVERSE DNS
+	shortUrl := "https://quiklink.site/" + shortKey //PROD
+
+	code, err := generateQRCode(shortUrl)
+	if err != nil {
+		log.Println(err)
+	}
+
 	response := jsonResponse{
 		OK:       true,
 		Message:  "Short URL created",
 		LongURL:  request.LongURL,
-		ShortURL: shortKey,
+		ShortURL: shortUrl,
+		QRCode:   code,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -97,11 +110,23 @@ func (m *Repository) Redirect(w http.ResponseWriter, r *http.Request) {
 	longURL, err := m.DB.GetLongUrlFromShort(shortKey)
 
 	if err != nil || longURL == "" {
+		log.Println(err)
 		_ = render.TemplateRenderer(w, r, "home.page.tmpl", &models.TemplateData{})
 		return
 	}
 
 	http.Redirect(w, r, longURL, http.StatusSeeOther)
+}
+
+func generateQRCode(url string) ([]byte, error) {
+	data := url
+	code, err := qrcode.Encode(data, qrcode.Medium, 256)
+	if err != nil {
+		log.Printf("Error generating QR code: %v", err)
+		return nil, err
+	}
+
+	return code, nil
 }
 
 // RandomString Generates a random string

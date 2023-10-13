@@ -66,6 +66,24 @@ input[type="text"] {
     font-size: 20px;
 }
 
+.shortened-zone {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.5s, transform 0.5s;
+}
+
+.shortened-zone.show {
+    display: block;
+    opacity: 1;
+    transform: scale(1);
+}
+
 a {
     color: #4285f4;
     text-decoration: none;

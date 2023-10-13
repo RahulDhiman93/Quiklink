@@ -24,10 +24,15 @@
             <button class="btn btn-primary" type="button" id="shortenButton">Shorten</button>
         </div>
     </div>
-    <p class="shortened-url">
-        <a id="shortenedUrl" href="#" target="_blank"></a>
+    <div class="shortened-zone">
+        <p class="shortened-url">
+            <a id="shortenedUrl" href="#" target="_blank"></a>
+        </p>
+        <div id="canvas-container" style="display: none; align-content: center; align-self: center">
+            <canvas id="qrImageCanvas" width="250" height="250" style="align-self: center"></canvas>
+        </div>
         <button class="btn btn-secondary" type="button" id="copyButton" style="display: none">Copy</button>
-    </p>
+    </div>
 </div>
 
 <footer>
@@ -51,7 +56,7 @@
             </div>
         </div>
 
-    </div> <!-- /row -->
+    </div>
 </footer>
 
 
@@ -88,13 +93,16 @@
         })
             .then(response => response.json())
             .then(data => {
-                let shortKey = data["short_url"];
-                // const shortenedUrl = "https://ec2-18-144-176-134.us-west-1.compute.amazonaws.com/" + shortKey;
-                const shortenedUrl = "https://quiklink.site/" + shortKey;
+                const shortenedUrl = data["short_url"];
 
                 copyButton.style.display = "inline"
                 document.getElementById("shortenedUrl").href = shortenedUrl;
                 document.getElementById("shortenedUrl").textContent = shortenedUrl;
+
+                setQrImage(data["qrcode"])
+
+                const shortenedZone = document.querySelector('.shortened-zone');
+                shortenedZone.classList.add('show');
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -118,6 +126,19 @@
         }
         const urlPattern = /^(https?:\/\/)?([\w.-]+)\.([a-zA-Z]{2,})(\S*)$/;
         return urlPattern.test(text);
+    }
+
+    function setQrImage(data) {
+        const bytes = data;
+        const canvasContainer = document.getElementById("canvas-container");
+        const canvas = document.getElementById("qrImageCanvas");
+        const ctx = canvas.getContext("2d");
+        const image = new Image();
+        image.src = "data:image/png;base64," + bytes;
+        image.onload = function() {
+            ctx.drawImage(image, 0, 0);
+            canvasContainer.style.display = "block";
+        };
     }
 </script>
 </body>
