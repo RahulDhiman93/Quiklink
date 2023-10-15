@@ -58,8 +58,6 @@
 
 
 <script>
-    checkUrlForRedirection()
-
     document.getElementById("shortenButton").addEventListener("click", function () {
         const originalUrl = document.getElementById("originalUrl").value.toLowerCase();
         var copyButton = document.getElementById("copyButton");
@@ -113,6 +111,8 @@
         document.body.removeChild(textArea);
         alert("Copied to clipboard");
     });
+
+    checkUrlForRedirection()
 
     function isURL(text) {
         if (!text.includes("http") || !text.includes("https")) {

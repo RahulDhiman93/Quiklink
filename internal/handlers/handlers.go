@@ -110,7 +110,6 @@ func (m *Repository) Redirect(w http.ResponseWriter, r *http.Request) {
 	longURL, err := m.DB.GetLongUrlFromShort(shortKey)
 
 	if err != nil || longURL == "" {
-		log.Println(err)
 		stringMap := make(map[string]string)
 		stringMap["url_not_found"] = "url_not_found"
 		_ = render.TemplateRenderer(w, r, "home.page.tmpl", &models.TemplateData{
