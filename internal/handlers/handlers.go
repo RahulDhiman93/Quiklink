@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"Quiklink_BE/internal/config"
 	"Quiklink_BE/internal/driver"
 	"Quiklink_BE/internal/models"
 	"Quiklink_BE/internal/render"
@@ -19,13 +20,15 @@ import (
 var Repo *Repository
 
 type Repository struct {
-	DB repository.DatabaseRepo
+	App *config.AppConfig
+	DB  repository.DatabaseRepo
 }
 
-// NewRepo creates a new repo
-func NewRepo(db *driver.DB) *Repository {
+// NewRepository creates a new repo
+func NewRepository(a *config.AppConfig, db *driver.DB) *Repository {
 	return &Repository{
-		DB: dbrepo.NewPostgresRepo(db.SQL),
+		App: a,
+		DB:  dbrepo.NewPostgresRepo(db.SQL, a),
 	}
 }
 
