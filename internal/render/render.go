@@ -80,12 +80,12 @@ func TemplateRenderer(w http.ResponseWriter, r *http.Request, tmpl string, td *m
 	//get requested template from cache
 	t, ok := tc[tmpl]
 	if !ok {
-		return errors.New("Could not get template from cache")
+		return errors.New("could not get template from cache")
 	}
 
 	buf := new(bytes.Buffer)
 
-	//td = AddDefaultData(td, r)
+	td = AddDefaultData(td, r)
 
 	_ = t.Execute(buf, td)
 

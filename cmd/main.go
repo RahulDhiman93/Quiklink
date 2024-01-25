@@ -5,7 +5,9 @@ import (
 	"Quiklink_BE/internal/driver"
 	"Quiklink_BE/internal/handlers"
 	"Quiklink_BE/internal/helpers"
+	"Quiklink_BE/internal/models"
 	"Quiklink_BE/internal/render"
+	"encoding/gob"
 	"flag"
 	"fmt"
 	"github.com/alexedwards/scs/v2"
@@ -32,7 +34,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:    portNum,
-		Handler: routes(),
+		Handler: routes(&app),
 	}
 
 	fmt.Println("Application listening on ", portNum)
@@ -44,6 +46,11 @@ func main() {
 }
 
 func run() (*driver.DB, error) {
+
+	gob.Register(models.User{})
+	gob.Register(models.TemplateData{})
+	gob.Register(models.AuthRequestBody{})
+	gob.Register(map[string]int{})
 
 	//read flags
 	inProduction := flag.Bool("production", false, "Application is in prod")
