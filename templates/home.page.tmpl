@@ -1,35 +1,61 @@
 {{template "base" .}}
 
 {{define "content"}}
-<div class="container">
-    <div class="logo-and-title">
-        <img src="/static/images/quiklink.png" width="35px" height="35px" alt="Logo">
-        <h1>Quiklink</h1>
-    </div>
-    <p>Enter a URL to get a shortened link:</p>
-    <div class="input-group mb-3">
-        <input type="text" id="originalUrl" class="form-control" placeholder="Enter URL" aria-label="Enter URL" aria-describedby="shortenButton">
-        <div class="input-group-append">
-            <button class="btn btn-primary" type="button" id="shortenButton">Shorten</button>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-lg-3 mb-4">
+                <div class="url-container">
+                    <div class="logo-and-title">
+                        <h1 class="text-label">Shorten a long URL</h1>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" id="originalUrl" class="form-control" placeholder="Enter long link here" aria-label="Enter long link here" aria-describedby="shortenButton">
+                    </div>
+                    <div class="logo-and-title mt-4">
+                        <h1 class="text-label">Customize your link</h1>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" id="alias" class="form-control" placeholder="Enter alias" aria-label="Enter alias" aria-describedby="shortenButton">
+                    </div>
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" id="shortenButton">Shorten URL</button>
+                    </div>
+                    <div class="shortened-zone">
+                        <div class="logo-and-title mt-4">
+                            <h1 class="text-label">Shortened URL</h1>
+                        </div>
+                        <p class="shortened-url">
+                            <a id="shortenedUrl" href="#" target="_blank"></a>
+                        </p>
+                        <div class="logo-and-title mt-3">
+                            <h1 class="text-label">Quick QR</h1>
+                        </div>
+                        <div id="canvas-container" style="display: none; align-content: flex-start; align-self: flex-start">
+                            <canvas id="qrImageCanvas" width="250" height="250" style="align-self: center"></canvas>
+                        </div>
+                        <button class="btn btn-secondary" type="button" id="copyButton" style="display: none">Copy</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-9">
+                <div class="info-container">
+                    <h1 class="text-info-label-h1">The OG of URL Shortener</h1>
+                    <h2 class="text-info-label-h2">Create quick URLs with QuikLink.</h2>
+                    <p class="text-info-label-p mt-4">
+                        QuikLink, empowers users to create swift and efficient short URLs effortlessly. With its user-friendly interface, QuikLink stands as the go-to platform for quickly transforming lengthy web addresses into concise and shareable links. Simplifying the process, QuikLink ensures a seamless experience for users looking to share, manage, and track their links with ease. Streamline your online presence with QuikLink – the original and trusted choice for URL shortening.
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="shortened-zone">
-        <p class="shortened-url">
-            <a id="shortenedUrl" href="#" target="_blank"></a>
-        </p>
-        <div id="canvas-container" style="display: none; align-content: center; align-self: center">
-            <canvas id="qrImageCanvas" width="250" height="250" style="align-self: center"></canvas>
-        </div>
-        <button class="btn btn-secondary" type="button" id="copyButton" style="display: none">Copy</button>
-    </div>
-</div>
 {{end}}
 
 {{define "js"}}
 <script>
     document.getElementById("shortenButton").addEventListener("click", function () {
         const originalUrl = document.getElementById("originalUrl").value.toLowerCase();
-        var copyButton = document.getElementById("copyButton");
+        const alias = document.getElementById("alias").value
+        const copyButton = document.getElementById("copyButton");
 
         if (!isURL(originalUrl)) {
             copyButton.style.display = "none"
@@ -42,7 +68,8 @@
 
         const url = '/shorten';
         const data = {
-            long_url: originalUrl
+            long_url: originalUrl,
+            url_alias: alias
         };
 
         fetch(url, {

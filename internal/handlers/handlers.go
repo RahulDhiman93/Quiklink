@@ -58,19 +58,18 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 
 // RegisterUser creates a new user
 func (m *Repository) RegisterUser(w http.ResponseWriter, r *http.Request) {
-	var requestBody models.AuthRequestBody
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&requestBody)
+	err := r.ParseForm()
 	if err != nil {
+		m.App.Session.Put(r.Context(), "error", "Can't parse form")
 		internalServerError(w, err)
 		return
 	}
 
-	email := requestBody.Email
-	password := requestBody.Password
-	firstName := requestBody.FirstName
-	lastName := requestBody.LastName
-	phone := requestBody.Phone
+	email := r.Form.Get("email")
+	password := r.Form.Get("password")
+	firstName := r.Form.Get("first_name")
+	lastName := r.Form.Get("last_name")
+	phone := r.Form.Get("phone")
 
 	if email == "" || password == "" || firstName == "" || lastName == "" {
 		internalServerError(w, fmt.Errorf("please add all attributes"))
@@ -83,30 +82,22 @@ func (m *Repository) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respData := make(map[string]interface{})
-	respData["user"] = user
-	response := authResponse{
-		OK:      true,
-		Message: "user registered successfully",
-		Data:    respData,
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	m.App.Session.Put(r.Context(), "user_id", user.Id)
+	m.App.Session.Put(r.Context(), "flash", "Registration successful!")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // LoginUser creates a new user
 func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
-	var requestBody models.AuthRequestBody
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&requestBody)
+	err := r.ParseForm()
 	if err != nil {
+		m.App.Session.Put(r.Context(), "error", "Can't parse form")
 		internalServerError(w, err)
 		return
 	}
 
-	email := requestBody.Email
-	password := requestBody.Password
+	email := r.Form.Get("email")
+	password := r.Form.Get("password")
 
 	if email == "" || password == "" {
 		internalServerError(w, fmt.Errorf("please add all attributes"))
@@ -131,36 +122,11 @@ func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-// AccessTokenLogin creates a new user
-func (m *Repository) AccessTokenLogin(w http.ResponseWriter, r *http.Request) {
-	token := chi.URLParam(r, "access_token")
-	if token == "" {
-		internalServerError(w, fmt.Errorf("please add access_token"))
-		return
-	}
-
-	user, err := m.DB.AccessTokenLogin(token)
-	if err != nil {
-		internalServerError(w, fmt.Errorf("user not found"))
-		return
-	}
-
-	respData := make(map[string]interface{})
-	respData["user"] = user
-	response := authResponse{
-		OK:      true,
-		Message: "user authenticated successfully",
-		Data:    respData,
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
-}
-
 // ShortenURL generates a short key for a given URL and stores it in the map.
 func (m *Repository) ShortenURL(w http.ResponseWriter, r *http.Request) {
 	var request struct {
-		LongURL string `json:"long_url"`
+		LongURL  string `json:"long_url"`
+		UrlAlias string `json:"url_alias"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -177,7 +143,11 @@ func (m *Repository) ShortenURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	shortKey := randomString(8)
+	shortKey := request.UrlAlias
+	if request.UrlAlias == "" {
+		shortKey = randomString(8)
+	}
+	log.Println("SHORTKEY -->", shortKey)
 
 	err := m.DB.InsertIntoShortUrlMap(shortKey, request.LongURL)
 	if err != nil {
@@ -194,9 +164,9 @@ func (m *Repository) ShortenURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	shortUrl := "http://localhost:8080/" + shortKey //DEV
+	//shortUrl := "http://localhost:8080/" + shortKey //DEV
 	//shortUrl := "https://ec2-18-144-176-134.us-west-1.compute.amazonaws.com/" + shortKey //REVERSE DNS
-	//shortUrl := "https://quiklink.site/" + shortKey //PROD
+	shortUrl := "https://quiklink.site/" + shortKey //PROD
 
 	code, err := generateQRCode(shortUrl)
 	if err != nil {

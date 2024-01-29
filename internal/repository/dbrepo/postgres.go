@@ -99,32 +99,6 @@ func (m *postgresDBRepo) LoginUser(email, password string) (models.User, error) 
 	return user, nil
 }
 
-// AccessTokenLogin Login the user with token
-func (m *postgresDBRepo) AccessTokenLogin(token string) (models.User, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-
-	var user models.User
-
-	query := `SELECT id, access_token, first_name, last_name, email, password, phone, access_level FROM users WHERE access_token = $1`
-
-	err := m.DB.QueryRowContext(ctx, query, token).Scan(
-		&user.Id,
-		&user.AccessToken,
-		&user.FirstName,
-		&user.LastName,
-		&user.Email,
-		&user.Password,
-		&user.Phone,
-		&user.AccessLevel,
-	)
-	if err != nil {
-		return user, err
-	}
-
-	return user, nil
-}
-
 func (m *postgresDBRepo) InsertIntoShortUrlMap(shortURL, longURL string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()

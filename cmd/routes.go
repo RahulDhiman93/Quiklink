@@ -24,18 +24,17 @@ func routes(app *config.AppConfig) http.Handler {
 
 	mux.Use(corsHandler)
 
-	mux.Get("/", handlers.Repo.Home)
-	mux.Post("/shorten", handlers.Repo.ShortenURL)
-	mux.Get("/{shortKey:[a-zA-Z0-9]+}", handlers.Repo.Redirect)
-
 	mux.Route("/auth", func(mux chi.Router) {
 		if app.InProduction {
 			mux.Use(Auth)
 		}
 		mux.Post("/login", handlers.Repo.LoginUser)
 		mux.Post("/register", handlers.Repo.RegisterUser)
-		mux.Get("/accessTokenLogin/{access_token}", handlers.Repo.AccessTokenLogin)
 	})
+
+	mux.Get("/", handlers.Repo.Home)
+	mux.Post("/shorten", handlers.Repo.ShortenURL)
+	mux.Get("/{shortKey:[a-zA-Z0-9]+}", handlers.Repo.Redirect)
 
 	fileServer := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))

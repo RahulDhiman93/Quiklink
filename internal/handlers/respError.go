@@ -5,8 +5,13 @@ import (
 	"net/http"
 )
 
+type errorResponse struct {
+	OK      bool   `json:"ok"`
+	Message string `json:"message"`
+}
+
 func internalServerError(w http.ResponseWriter, err error) {
-	resp := jsonResponse{
+	resp := errorResponse{
 		OK:      false,
 		Message: err.Error(),
 	}

@@ -1,42 +1,96 @@
 body {
     background: linear-gradient(35deg, orange, purple);
+    background-size: 200% 200%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     height: 100vh;
-    margin: 0;
+    margin-top: 45px;
     overflow: hidden;
+    animation: gradientAnimation 5s linear infinite;
 }
 
-.container {
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.url-container {
+    position: absolute;
+    top: 60px;
+    left: 30px;
+    height: 300px;
+    width: 500px;
     background-color: white;
     margin: 10px 10px 10px 10px;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
+}
+
+.info-container {
+    position: absolute;
+    left: 540px;
+    background-color: transparent;
+    margin: 10px;
+    padding: 10px;
+    align-self: flex-start;
 }
 
 .logo-and-title {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .logo-and-title img {
     margin-right: 10px;
 }
 
-h1 {
-    color: #4285f4;
-    font-size: 36px;
+.text-label {
+    color: black;
+    font-size: 20px;
+}
+
+.text-info-label-h1 {
+    color: white;
+    font-size: 60px;
+    font-weight: bolder;
+}
+
+.text-info-label-h2 {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.text-info-label-p {
+    color: white;
+    font-size: 18px;
+    font-weight: normal;
 }
 
 .input-group {
-    margin-top: 20px;
+    margin-top: 5px;
 }
 
 input[type="text"] {
+    border: 1px solid #dfe1e5;
+    border-radius: 5px;
+    margin-right: 57px;
+    padding: 10px 15px;
+    font-size: 16px;
+    width: 100%;
+}
+
+input[type="email"] {
     border: 1px solid #dfe1e5;
     border-radius: 24px;
     margin-right: 57px;
@@ -70,7 +124,7 @@ input[type="password"] {
 .btn-secondary {
     background-color: #4285f4;
     border: none;
-    margin-left: 10px;
+    margin-left: 0;
     border-radius: 24px;
     padding: 10px 20px;
     font-size: 16px;
@@ -82,26 +136,33 @@ input[type="password"] {
 }
 
 .shortened-url {
-    margin-top: 10px;
+    margin-top: 0;
     font-size: 20px;
 }
 
 .shortened-zone {
+    position: absolute;
+    top: 280px;
+    left: 0;
+    height: 0;
+    width: 500px;
+    border-radius: 10px;
+    padding: 10px 20px;
     background-color: white;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    text-align: left;
     opacity: 0;
-    transform: scale(0);
-    transition: opacity 0.5s, transform 0.5s;
+    transform: translateY(-50%);
+    transition: opacity 0.5s, transform 0.5s, height 0.5s;
 }
 
 .shortened-zone.show {
-    display: block;
+    height: 500px;
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0);
 }
 
 #qrImageCanvas {

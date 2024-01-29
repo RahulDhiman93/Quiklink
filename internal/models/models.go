@@ -14,6 +14,7 @@ type TemplateData struct {
 	Error           string
 	Form            *forms.Form
 	IsAuthenticated int
+	User            User
 }
 
 type AuthRequestBody struct {
