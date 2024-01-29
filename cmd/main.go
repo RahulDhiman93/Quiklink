@@ -1,16 +1,28 @@
 package main
 
 import (
+	"Quiklink_BE/internal/config"
 	"Quiklink_BE/internal/driver"
 	"Quiklink_BE/internal/handlers"
+	"Quiklink_BE/internal/helpers"
+	"Quiklink_BE/internal/models"
+	"Quiklink_BE/internal/render"
+	"encoding/gob"
 	"flag"
 	"fmt"
+	"github.com/alexedwards/scs/v2"
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 const portNum = ":8080"
+
+var app config.AppConfig
+var session *scs.SessionManager
+var infoLog *log.Logger
+var errorLog *log.Logger
 
 func main() {
 	db, err := run()
@@ -22,7 +34,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:    portNum,
-		Handler: routes(),
+		Handler: routes(&app),
 	}
 
 	fmt.Println("Application listening on ", portNum)
@@ -35,7 +47,14 @@ func main() {
 
 func run() (*driver.DB, error) {
 
+	gob.Register(models.User{})
+	gob.Register(models.TemplateData{})
+	gob.Register(models.AuthRequestBody{})
+	gob.Register(map[string]int{})
+
 	//read flags
+	inProduction := flag.Bool("production", false, "Application is in prod")
+	useCache := flag.Bool("cache", true, "Use template cache")
 	dbName := flag.String("dbname", "", "Database name")
 	dbHost := flag.String("dbhost", "localhost", "Database host")
 	dbUser := flag.String("dbuser", "", "Database user")
@@ -50,6 +69,26 @@ func run() (*driver.DB, error) {
 		os.Exit(1)
 	}
 
+	//change to true for Production
+	app.InProduction = *inProduction
+	app.UseCache = *useCache
+
+	//Info Log setup
+	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	app.InfoLog = infoLog
+
+	//Error Log setup
+	errorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	app.ErrorLog = errorLog
+
+	session = scs.New()
+	session.Lifetime = 24 * time.Hour
+	session.Cookie.Persist = true
+	session.Cookie.SameSite = http.SameSiteLaxMode
+	session.Cookie.Secure = app.InProduction
+
+	app.Session = session
+
 	//Connect to DB
 	log.Println("<<<-- Connecting to DB")
 	connectionString := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s", *dbHost, *dbPort, *dbName, *dbUser, *dbPass, *dbSSL)
@@ -61,8 +100,17 @@ func run() (*driver.DB, error) {
 	}
 	log.Println("Connected to DB -->>>")
 
-	repo := handlers.NewRepo(db)
+	tc, err := render.CreateTemplateCache()
+	if err != nil {
+		return db, err
+	}
+
+	app.TemplateCache = tc
+
+	repo := handlers.NewRepository(&app, db)
 	handlers.FreshHandlers(repo)
+	render.NewRenderer(&app)
+	helpers.NewHelpers(&app)
 
 	return db, nil
 }
