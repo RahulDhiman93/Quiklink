@@ -81,8 +81,13 @@
         })
             .then(response => response.json())
             .then(data => {
-                const shortenedUrl = data["short_url"];
+                if (data["ok"] === false) {
+                    alert(data["message"]);
+                    window.location.reload();
+                    return
+                }
 
+                const shortenedUrl = data["short_url"];
                 copyButton.style.display = "inline"
                 document.getElementById("shortenedUrl").href = shortenedUrl;
                 document.getElementById("shortenedUrl").textContent = shortenedUrl;
@@ -93,7 +98,8 @@
                 shortenedZone.classList.add('show');
             })
             .catch(error => {
-                console.error('Error:', error);
+                alert(error);
+                window.location.reload();
             });
     });
 

@@ -164,9 +164,9 @@ func (m *Repository) ShortenURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//shortUrl := "http://localhost:8080/" + shortKey //DEV
+	shortUrl := "http://localhost:8080/" + shortKey //DEV
 	//shortUrl := "https://ec2-18-144-176-134.us-west-1.compute.amazonaws.com/" + shortKey //REVERSE DNS
-	shortUrl := "https://quiklink.site/" + shortKey //PROD
+	//shortUrl := "https://quiklink.site/" + shortKey //PROD
 
 	code, err := generateQRCode(shortUrl)
 	if err != nil {
