@@ -103,6 +103,12 @@ func (m *postgresDBRepo) InsertIntoShortUrlMap(shortURL, longURL string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
+	if exists, err := m.shortURLExists(ctx, shortURL); err != nil {
+		return err
+	} else if exists {
+		return fmt.Errorf("shortURL %s already exists", shortURL)
+	}
+
 	query := `insert into short_url_map (short_url, long_url, created_at, updated_at)
               values ($1, $2, $3, $4)`
 
@@ -118,6 +124,18 @@ func (m *postgresDBRepo) InsertIntoShortUrlMap(shortURL, longURL string) error {
 	}
 
 	return nil
+}
+
+func (m *postgresDBRepo) shortURLExists(ctx context.Context, shortURL string) (bool, error) {
+	query := "select exists (select 1 from short_url_map where short_url = $1)"
+
+	var exists bool
+	err := m.DB.QueryRowContext(ctx, query, shortURL).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+
+	return exists, nil
 }
 
 // GetLongUrlFromShort gets a long url from short
