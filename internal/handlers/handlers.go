@@ -14,6 +14,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -139,6 +140,20 @@ func (m *Repository) ShortenURL(w http.ResponseWriter, r *http.Request) {
 		err := json.NewEncoder(w).Encode(resp)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+
+	if strings.Contains(request.LongURL, "quiklink.site") {
+		resp := jsonResponse{
+			OK:      false,
+			Message: "Quiklink URL not allowed",
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		err := json.NewEncoder(w).Encode(resp)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotAcceptable)
 		}
 		return
 	}
