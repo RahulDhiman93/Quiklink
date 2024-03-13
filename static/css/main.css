@@ -5,6 +5,7 @@ body {
     align-items: flex-start;
     margin-top: 45px;
     overflow-x: hidden;
+    font-family: 'Poppins', sans-serif;
 }
 
 .url-container {
