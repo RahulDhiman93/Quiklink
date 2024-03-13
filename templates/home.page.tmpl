@@ -1,43 +1,51 @@
 {{template "base" .}}
 
 {{define "content"}}
-    <div class="container">
+    <div>
         <div class="row">
-            <div class="col-md-12 col-lg-3 mb-4">
-                <div class="url-container">
-                    <div class="logo-and-title">
-                        <h1 class="text-label">Shorten a long URL</h1>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="text" id="originalUrl" class="form-control" placeholder="Enter long link here" aria-label="Enter long link here" aria-describedby="shortenButton">
-                    </div>
-                    <div class="logo-and-title mt-4">
-                        <h1 class="text-label">Customize your link</h1>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="text" id="alias" class="form-control" placeholder="Enter alias" aria-label="Enter alias" aria-describedby="shortenButton">
-                    </div>
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="button" id="shortenButton">Shorten URL</button>
-                    </div>
-                    <div class="shortened-zone">
+            <div class="col-md-4 col-lg-4">
+                <div class="col-md-12 col-lg-12">
+                    <div class="url-container">
+                        <div class="logo-and-title">
+                            <h1 class="text-label">Shorten a long URL</h1>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" id="originalUrl" class="form-control" placeholder="Enter long link here" aria-label="Enter long link here" aria-describedby="shortenButton">
+                        </div>
                         <div class="logo-and-title mt-4">
-                            <h1 class="text-label">Shortened URL</h1>
+                            <h1 class="text-label">Customize your link</h1>
                         </div>
-                        <p class="shortened-url">
-                            <a id="shortenedUrl" href="#" target="_blank"></a>
-                        </p>
-                        <div class="logo-and-title mt-3">
-                            <h1 class="text-label">Quick QR</h1>
+                        <div class="input-group mb-3">
+                            <input type="text" id="alias" class="form-control" placeholder="Enter alias" aria-label="Enter alias" aria-describedby="shortenButton">
                         </div>
-                        <div id="canvas-container" style="display: none; align-content: flex-start; align-self: flex-start">
-                            <canvas id="qrImageCanvas" width="250" height="250" style="align-self: center"></canvas>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-block" type="button" id="shortenButton">Shorten URL</button>
                         </div>
-                        <button class="btn btn-secondary" type="button" id="copyButton" style="display: none">Copy</button>
+                    </div>
+                    <div class="shortened-container" style="display: none">
+                        <div class="logo-and-title">
+                            <h1 class="text-label">Your Long URL</h1>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" id="longUrlBox" class="form-control" aria-describedby="shortenZone" readonly>
+                        </div>
+                        <div class="logo-and-title mt-4">
+                            <h1 class="text-label">QuikLink</h1>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" id="shortenedUrlBox" class="form-control" aria-describedby="shortenZone" readonly>
+                        </div>
+                        <div class="button-group mb-1 btn-block" style="display: flex; width: 100%;">
+                            <button class="btn btn-primary" type="button" id="openUrlButton" style="flex: 1; margin-right: 5px;">Open URL</button>
+                            <button class="btn btn-primary" type="button" id="copyButton" style="flex: 1;">Copy Link</button>
+                        </div>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-block" type="button" id="shortenAgainButton">Shorten another</button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-9">
+            <div class="col-md-8 col-lg-8">
                 <div class="info-container">
                     <h1 class="text-info-label-h1">The OG of URL Shortener</h1>
                     <h2 class="text-info-label-h2">Create quick URLs with QuikLink.</h2>
@@ -46,6 +54,8 @@
                     </p>
                 </div>
             </div>
+        </div>
+        <div class="row">
         </div>
     </div>
 {{end}}
@@ -89,13 +99,16 @@
 
                 const shortenedUrl = data["short_url"];
                 copyButton.style.display = "inline"
-                document.getElementById("shortenedUrl").href = shortenedUrl;
-                document.getElementById("shortenedUrl").textContent = shortenedUrl;
+                document.getElementById("longUrlBox").value = originalUrl;
+                document.getElementById("shortenedUrlBox").value = shortenedUrl;
 
-                setQrImage(data["qrcode"])
+                //setQrImage(data["qrcode"])
+                const urlContainer = document.querySelector('.url-container');
+                urlContainer.style.display = "none";
 
-                const shortenedZone = document.querySelector('.shortened-zone');
-                shortenedZone.classList.add('show');
+                const shortenedContainer = document.querySelector('.shortened-container');
+                shortenedContainer.classList.add('show');
+                shortenedContainer.style.display = "block";
             })
             .catch(error => {
                 alert(error);
@@ -103,15 +116,33 @@
             });
     });
 
+    document.getElementById("openUrlButton").addEventListener("click", function () {
+        console.log("Event listener triggered");
+        console.log("INSIDE OPEN URL")
+        const shortenedUrl = document.getElementById("shortenedUrlBox");
+        console.log("Shortened URL:", shortenedUrl.value); // Add this line
+        window.open(shortenedUrl.value, '_blank');
+    });
+
     document.getElementById("copyButton").addEventListener("click", function () {
-        const shortenedUrl = document.getElementById("shortenedUrl");
+        const shortenedUrl = document.getElementById("shortenedUrlBox");
         const textArea = document.createElement("textarea");
-        textArea.value = shortenedUrl.textContent;
+        textArea.value = shortenedUrl.value;
         document.body.appendChild(textArea);
         textArea.select();
         document.execCommand("copy");
         document.body.removeChild(textArea);
         alert("Copied to clipboard");
+    });
+
+    document.getElementById("shortenAgainButton").addEventListener("click", function () {
+        document.getElementById("originalUrl").value = ""
+
+        const urlContainer = document.querySelector('.url-container');
+        urlContainer.style.display = "block";
+
+        const shortenedContainer = document.querySelector('.shortened-container');
+        shortenedContainer.style.display = "none";
     });
 
     checkUrlForRedirection()

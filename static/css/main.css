@@ -1,47 +1,63 @@
 body {
-    background: linear-gradient(35deg, orange, purple);
-    background-size: 200% 200%;
-    display: flex;
-    justify-content: center;
+    background: linear-gradient(70deg, orange, #800160);
+    background-size: 100% 350%;
+    justify-content: start;
     align-items: flex-start;
-    height: 100vh;
     margin-top: 45px;
-    overflow: hidden;
-    animation: gradientAnimation 5s linear infinite;
-}
-
-@keyframes gradientAnimation {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+    overflow-x: hidden;
 }
 
 .url-container {
-    position: absolute;
-    top: 60px;
-    left: 30px;
     height: 300px;
-    width: 500px;
     background-color: white;
-    margin: 10px 10px 10px 10px;
+    margin: 10px 0 10px 30px;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .info-container {
-    position: absolute;
-    left: 540px;
     background-color: transparent;
-    margin: 10px;
+    margin: 10px 50px 10px 0;
     padding: 10px;
     align-self: flex-start;
+}
+
+.shortened-container {
+    height: 350px;
+    background-color: white;
+    margin: 10px 0 10px 30px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.5s, transform 0.5s, height 0.5s;
+    overflow-y: hidden;
+}
+
+.shortened-container.show {
+    opacity: 1;
+    overflow-y: scroll;
+}
+
+.shortened-url {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+.button-group {
+    display: flex;
+    width: 100%;
+}
+
+.button-group .btn {
+    flex: 1;
+}
+
+#qrImageCanvas {
+    border: 2px solid #800160;
+    border-radius: 10px;
+    margin-bottom: 1rem;
 }
 
 .logo-and-title {
@@ -61,19 +77,19 @@ body {
 
 .text-info-label-h1 {
     color: white;
-    font-size: 60px;
+    font-size: 40px;
     font-weight: bolder;
 }
 
 .text-info-label-h2 {
     color: white;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: bold;
 }
 
 .text-info-label-p {
     color: white;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: normal;
 }
 
@@ -84,7 +100,6 @@ body {
 input[type="text"] {
     border: 1px solid #dfe1e5;
     border-radius: 5px;
-    margin-right: 57px;
     padding: 10px 15px;
     font-size: 16px;
     width: 100%;
@@ -109,70 +124,39 @@ input[type="password"] {
 }
 
 .btn-primary {
-    background-color: #4285f4;
+    background-color: #800160;
     border: none;
-    border-radius: 24px;
+    border-radius: 5px;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
 }
 
 .btn-primary:hover {
-    background-color: #3579e5;
+    background-color: #ffA100;
 }
 
 .btn-secondary {
-    background-color: #4285f4;
+    background-color: #ffA100;
     border: none;
     margin-left: 0;
-    border-radius: 24px;
+    border-radius: 5px;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
 }
 
 .btn-secondary:hover {
-    background-color: #3579e5;
+    background-color: #800160;
 }
 
-.shortened-url {
-    margin-top: 0;
-    font-size: 20px;
-}
-
-.shortened-zone {
-    position: absolute;
-    top: 280px;
-    left: 0;
-    height: 0;
-    width: 500px;
-    border-radius: 10px;
-    padding: 10px 20px;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    text-align: left;
-    opacity: 0;
-    transform: translateY(-50%);
-    transition: opacity 0.5s, transform 0.5s, height 0.5s;
-}
-
-.shortened-zone.show {
-    height: 500px;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-#qrImageCanvas {
-    border: 2px solid #4285f4;
-    border-radius: 10px;
-    margin-bottom: 1rem;
+.btn-block {
+    display: block;
+    width: 100%;
 }
 
 a {
-    color: #4285f4;
+    color: #800160;
     text-decoration: none;
 }
 
@@ -234,16 +218,11 @@ a {
     border-radius: 5px;
 }
 
-.btn-block {
-    display: block;
-    width: 100%;
-}
-
-@media (max-width: 768px) {
-    .login-form {
-        width: 90%;
-    }
-}
+/*@media (max-width: 768px) {*/
+/*    .login-form {*/
+/*        width: 90%;*/
+/*    }*/
+/*}*/
 
 .overlay {
     position: fixed;
@@ -261,23 +240,20 @@ a {
 }
 
 .my-footer {
-    /*height: 5em;*/
-    background-color: transparent;
+    background: #800160;
     margin-top: 1.5em;
     padding: 1em;
     color: #FFFFFF;
     font-size: 80%;
+    z-index: 10000;
 }
 
 footer {
     position: fixed;
-    margin-top: 2rem;
     left: 0;
     bottom: 0;
     width: 100%;
     text-align: center;
-    padding-bottom: 1rem;
-    font-size: 1.0rem;
 }
 
 footer a,
@@ -287,7 +263,7 @@ footer a:visited {
 
 footer a:hover,
 footer a:focus {
-    color: #4285f4;
+    color: #ffA100;
 }
 
 footer .row {
@@ -296,25 +272,6 @@ footer .row {
 
 footer .social {
     text-align: right;
-}
-
-footer .footer-social {
-    display: inline-block;
-    font-size: 2.1rem;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    top: -.3rem;
-}
-
-footer .footer-social li {
-    display: inline-block;
-    margin: 0 12px;
-    padding: 0;
-}
-
-footer .footer-social li a {
-    color: #FFFFFF;
 }
 
 footer .copyright span {

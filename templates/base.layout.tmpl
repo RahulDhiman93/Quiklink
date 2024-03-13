@@ -24,7 +24,7 @@
                 <img src="/static/images/quiklink.png" alt="Logo" width="25" height="25" class="d-inline-block align-text-top">
                 Quiklink
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="display: none">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -49,18 +49,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/contact" tabindex="-1" aria-disabled="true">Contact Us</a>
                     </li>
-                    <li class="nav-item">
-                        {{if eq .IsAuthenticated 1}}
-                            <a class="nav-link" href="/user/login" tabindex="-1" aria-disabled="true">Profile</a>
-                        {{else}}
-                            <li class="nav-item">
-                                <a id="loginButton" class="nav-link" href="#" tabindex="-1" aria-disabled="true">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a id="registerButton" class="nav-link" href="#" tabindex="-1" aria-disabled="true">Register</a>
-                            </li>
-                        {{end}}
-                    </li>
                 </ul>
             </div>
         </div>
@@ -69,74 +57,6 @@
     {{block "content" .}}
 
     {{end}}
-
-    <div id="loginContainer" class="login-register-container">
-        <div class="login-register-content">
-            <div class="header">
-                <h2>Quiklink</h2>
-            </div>
-            <br>
-            <form id="loginForm" class="login-form" method="POST" action="/auth/login" novalidate>
-                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
-                <div class="login-container">
-                    <label for="email"> <b>Email</b>
-                        <input type="text" placeholder="Enter Email ID" name="email" required>
-                    </label>
-                    <br>
-                    <br>
-                    <label for="psw"> <b>Password</b>
-                        <input type="password" placeholder="Enter Password" name="psw" required>
-                    </label>
-                    <br>
-                    <br>
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="rememberMe">
-                        <label class="form-check-label" for="rememberMe">Remember me</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Login</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="registerContainer" class="login-register-container">
-        <div class="login-register-content">
-            <div class="header">
-                <h2>Quiklink</h2>
-            </div>
-            <br>
-            <form id="loginForm" class="login-form" method="POST" action="/auth/register" novalidate>
-                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
-                <div class="login-container">
-                    <label for="first_name"> <b>First Name</b>
-                        <input type="text" name="first_name" id="first_name" placeholder="Enter First Name" required>
-                    </label>
-                    <br>
-                    <br>
-                    <label for="last_name"> <b>Last Name</b>
-                        <input type="text" name="last_name" id="last_name" placeholder="Enter Last Name"  required>
-                    </label>
-                    <br>
-                    <br>
-                    <label for="email"> <b>Email</b>
-                        <input type="email" name="email" id="email" placeholder="Enter Email ID" required>
-                    </label>
-                    <br>
-                    <br>
-                    <label for="password"> <b>Password</b>
-                        <input type="password" name="password" id="password" placeholder="Enter Password" required>
-                    </label>
-                    <br>
-                    <br>
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="rememberMe">
-                        <label class="form-check-label" for="rememberMe">Remember me</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Register</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <footer class="my-footer">
         <div class="container-fluid">
