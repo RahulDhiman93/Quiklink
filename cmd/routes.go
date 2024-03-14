@@ -3,8 +3,8 @@ package main
 import (
 	"Quiklink_BE/internal/config"
 	"Quiklink_BE/internal/handlers"
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	gh "github.com/gorilla/handlers"
 	"net/http"
 )

@@ -9,7 +9,7 @@ import (
 	"Quiklink_BE/internal/repository/dbrepo"
 	"encoding/json"
 	"fmt"
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	qrcode "github.com/skip2/go-qrcode"
 	"log"
 	"math/rand"

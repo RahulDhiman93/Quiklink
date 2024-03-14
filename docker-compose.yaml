@@ -10,7 +10,7 @@ services:
     command:
       - bash
       - -c
-      - go build -o Quiklink_BE cmd/*.go && ./Quiklink_BE -dbname=Quiklink_BE -dbuser=postgres
+      - chmod +x run.sh && ./run.sh
     ports:
       - "8080:8080"
     tty: true
