@@ -6,8 +6,8 @@ COPY . .
 
 WORKDIR /app
 COPY . .
-RUN chmod +x run.sh
+RUN chmod +x prod.sh
 
 EXPOSE 8080
 
-CMD ["./run.sh"]
+CMD ["./prod.sh"]

@@ -56,10 +56,10 @@ func run() (*driver.DB, error) {
 	inProduction := flag.Bool("production", false, "Application is in prod")
 	useCache := flag.Bool("cache", true, "Use template cache")
 	dbName := flag.String("dbname", "", "Database name")
-	dbHost := flag.String("dbhost", "host.docker.internal", "Database host")
+	dbHost := flag.String("dbhost", "", "Database host")
 	dbUser := flag.String("dbuser", "", "Database user")
 	dbPass := flag.String("dbpass", "", "Database pass")
-	dbPort := flag.String("dbport", "5432 ", "Database port")
+	dbPort := flag.String("dbport", "", "Database port")
 	dbSSL := flag.String("dbssl", "disable", "Database SSL settings (disable, prefer, require)")
 
 	flag.Parse()

@@ -10,24 +10,10 @@ services:
     command:
       - bash
       - -c
-      - chmod +x run.sh && ./run.sh
+      - chmod +x prod.sh && ./prod.sh
     ports:
       - "8080:8080"
     tty: true
-    depends_on:
-      - postgres
-
-  postgres:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_DB: Quiklink_BE
-      POSTGRES_HOST_AUTH_METHOD: trust
-    volumes:
-      - ./data:/data/db
-    ports:
-      - "5432:5432"
 
 volumes:
   data:
