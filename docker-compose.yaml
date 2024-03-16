@@ -4,13 +4,12 @@ services:
   quiklink_app:
     build:
       context: .
+      dockerfile: Dockerfile
+    image: quiklink_app_image
     container_name: quiklink_app
+    platform: linux/amd64
     volumes:
       - ./:/usr/src/app
-    command:
-      - bash
-      - -c
-      - chmod +x prod.sh && ./prod.sh
     ports:
       - "8080:8080"
     tty: true
