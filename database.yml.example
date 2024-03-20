@@ -1,0 +1,15 @@
+development:
+  dialect: postgres
+  database: Quiklink_BE
+  user: USER_HERE
+  password:
+  host: 127.0.0.1
+  pool: 5
+
+production:
+  dialect: postgres
+  database: Quiklink_BE
+  user: AWS_DB_USER_HERE
+  password: AWS_RDS_PASSWORD
+  host: AWS_RDS_ENDPOINT
+  pool: 5
