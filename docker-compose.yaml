@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: quiklink_app_image
+    image: quiklink-docker
     container_name: quiklink_app
     platform: linux/amd64
     volumes:
