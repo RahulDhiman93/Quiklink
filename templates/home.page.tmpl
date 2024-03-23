@@ -37,12 +37,33 @@
                         </div>
                         <div class="button-group mb-1 btn-block" style="display: flex; width: 100%;">
                             <button class="btn btn-primary" type="button" id="openUrlButton" style="flex: 1; margin-right: 5px;">Open URL</button>
+                            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#qrCode" id="showQrButton" style="flex: 1; margin-right: 5px;">QR Code</button>
                             <button class="btn btn-primary" type="button" id="copyButton" style="flex: 1;">Copy Link</button>
                         </div>
                         <div class="input-group-append">
                             <button class="btn btn-primary btn-block" type="button" id="shortenAgainButton">Shorten another</button>
                         </div>
                     </div>
+                    <div id="qrCode" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">QR Code</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Some text in the modal.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="col-sm-12 col-md-7 col-lg-7">
@@ -61,118 +82,19 @@
 {{end}}
 
 {{define "js"}}
-<script>
-    document.getElementById("shortenButton").addEventListener("click", function () {
-        const originalUrl = document.getElementById("originalUrl").value
-        const alias = document.getElementById("alias").value
-        const copyButton = document.getElementById("copyButton");
+    <script src="/static/js/home-screen.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("[data-toggle='popover']").popover();
+        });
 
-        if (!isURL(originalUrl)) {
-            copyButton.style.display = "none"
-            document.getElementById("originalUrl").value = "";
-            document.getElementById("shortenedUrl").href = "#!";
-            document.getElementById("shortenedUrl").textContent = "";
-            alert("Enter a valid URL");
-            return
-        }
+        checkUrlForRedirection()
 
-        const url = '/shorten';
-        const data = {
-            long_url: originalUrl,
-            url_alias: alias
-        };
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data["ok"] === false) {
-                    alert(data["message"]);
-                    window.location.reload();
-                    return
-                }
-
-                const shortenedUrl = data["short_url"];
-                copyButton.style.display = "inline"
-                document.getElementById("longUrlBox").value = originalUrl;
-                document.getElementById("shortenedUrlBox").value = shortenedUrl;
-
-                //setQrImage(data["qrcode"])
-                const urlContainer = document.querySelector('.url-container');
-                urlContainer.style.display = "none";
-
-                const shortenedContainer = document.querySelector('.shortened-container');
-                shortenedContainer.classList.add('show');
-                shortenedContainer.style.display = "block";
-            })
-            .catch(error => {
-                alert(error);
-                window.location.reload();
-            });
-    });
-
-    document.getElementById("openUrlButton").addEventListener("click", function () {
-        console.log("Event listener triggered");
-        console.log("INSIDE OPEN URL")
-        const shortenedUrl = document.getElementById("shortenedUrlBox");
-        console.log("Shortened URL:", shortenedUrl.value); // Add this line
-        window.open(shortenedUrl.value, '_blank');
-    });
-
-    document.getElementById("copyButton").addEventListener("click", function () {
-        const shortenedUrl = document.getElementById("shortenedUrlBox");
-        const textArea = document.createElement("textarea");
-        textArea.value = shortenedUrl.value;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textArea);
-        alert("Copied to clipboard");
-    });
-
-    document.getElementById("shortenAgainButton").addEventListener("click", function () {
-        document.getElementById("originalUrl").value = ""
-
-        const urlContainer = document.querySelector('.url-container');
-        urlContainer.style.display = "block";
-
-        const shortenedContainer = document.querySelector('.shortened-container');
-        shortenedContainer.style.display = "none";
-    });
-
-    checkUrlForRedirection()
-
-    function isURL(text) {
-        if (!text.includes("http") || !text.includes("https")) {
-            return false
-        }
-        const urlPattern = /^(https?:\/\/)?([\w.-]+)\.([a-zA-Z]{2,})(\S*)$/;
-        return urlPattern.test(text);
-    }
-
-    function setQrImage(data) {
-        const bytes = data;
-        const canvasContainer = document.getElementById("canvas-container");
-        const canvas = document.getElementById("qrImageCanvas");
-        const ctx = canvas.getContext("2d");
-        const image = new Image();
-        image.src = "data:image/png;base64," + bytes;
-        image.onload = function() {
-            ctx.drawImage(image, 0, 0);
-            canvasContainer.style.display = "block";
-        };
-    }
-
-    function checkUrlForRedirection() {
-        {{$err := index .StringMap "url_not_found"}}
-        {{if eq $err "url_not_found"}}
+        function checkUrlForRedirection() {
+            {{$err := index .StringMap "url_not_found"}}
+            {{if eq $err "url_not_found"}}
             alert("Unable to find the URL!!!");
-        {{end}}
-    }
-</script>
+            {{end}}
+        }
+    </script>
 {{end}}

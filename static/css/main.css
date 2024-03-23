@@ -32,7 +32,7 @@ body {
 }
 
 .shortened-container {
-    height: 350px;
+    height: 345px;
     background-color: white;
     margin: 10px 0 10px 0;
     padding: 20px;
@@ -51,6 +51,12 @@ body {
 .shortened-url {
     margin-top: 0;
     font-size: 20px;
+}
+
+@media only screen and (max-width: 1048px) {
+    .shortened-container {
+        height: 365px;
+    }
 }
 
 .button-group {
