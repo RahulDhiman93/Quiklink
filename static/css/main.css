@@ -59,6 +59,21 @@ body {
     }
 }
 
+.qr-modal-body {
+    display: flex;
+    justify-content: center;
+}
+
+.qr-container {
+    align-content: center;
+    justify-items: center;
+}
+
+#qrImageCanvas {
+    border: 2px solid #800160;
+    border-radius: 10px;
+}
+
 .button-group {
     display: flex;
     width: 100%;
@@ -66,12 +81,6 @@ body {
 
 .button-group .btn {
     flex: 1;
-}
-
-#qrImageCanvas {
-    border: 2px solid #800160;
-    border-radius: 10px;
-    margin-bottom: 1rem;
 }
 
 .logo-and-title {

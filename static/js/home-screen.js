@@ -45,6 +45,8 @@ document.getElementById("shortenButton").addEventListener("click", function () {
             const shortenedContainer = document.querySelector('.shortened-container');
             shortenedContainer.classList.add('show');
             shortenedContainer.style.display = "block";
+
+            setQrImage(data["qrcode"])
         })
         .catch(error => {
             alert(error);
