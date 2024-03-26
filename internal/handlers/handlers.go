@@ -164,40 +164,43 @@ func (m *Repository) ShortenURL(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("SHORTKEY -->", shortKey)
 
-	err := m.DB.InsertIntoShortUrlMap(shortKey, request.LongURL)
-	if err != nil {
-		resp := jsonResponse{
-			OK:      false,
-			Message: err.Error(),
-		}
+	errChan := make(chan error)
+	defer close(errChan)
 
-		w.Header().Set("Content-Type", "application/json")
-		err := json.NewEncoder(w).Encode(resp)
+	go func() {
+		errChan <- m.DB.InsertIntoShortUrlMap(shortKey, request.LongURL)
+	}()
+
+	qrCodeChan := make(chan []byte)
+	defer close(qrCodeChan)
+
+	go func() {
+		code, err := generateQRCode("https://quiklink.site/" + shortKey)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			log.Println(err)
+			qrCodeChan <- []byte{}
+			return
 		}
+		qrCodeChan <- code
+	}()
+
+	dbErr := <-errChan
+	qrCode := <-qrCodeChan
+
+	if dbErr != nil {
+		respondWithError(w, dbErr.Error(), http.StatusBadRequest)
 		return
-	}
-
-	//shortUrl := "http://localhost:8080/" + shortKey //DEV
-	//shortUrl := "https://ec2-18-144-176-134.us-west-1.compute.amazonaws.com/" + shortKey //REVERSE DNS
-	shortUrl := "https://quiklink.site/" + shortKey //PROD
-
-	code, err := generateQRCode(shortUrl)
-	if err != nil {
-		log.Println(err)
 	}
 
 	response := jsonResponse{
 		OK:       true,
 		Message:  "Short URL created",
 		LongURL:  request.LongURL,
-		ShortURL: shortUrl,
-		QRCode:   code,
+		ShortURL: "https://quiklink.site/" + shortKey,
+		QRCode:   qrCode,
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	respondWithJSON(w, response, http.StatusOK)
 }
 
 // Redirect redirects the short URL to the original long URL.
