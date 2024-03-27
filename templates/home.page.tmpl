@@ -96,7 +96,10 @@
         function checkUrlForRedirection() {
             {{$err := index .StringMap "url_not_found"}}
             {{if eq $err "url_not_found"}}
-            alert("Unable to find the URL!!!");
+                prompt().error({
+                    title: "OOPS!!!",
+                    msg: "Unable to find your Quiklink"
+                });
             {{end}}
         }
     </script>

@@ -10,12 +10,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-chi/chi/v5"
-	qrcode "github.com/skip2/go-qrcode"
 	"log"
-	"math/rand"
 	"net/http"
 	"strings"
-	"time"
 )
 
 var Repo *Repository
@@ -164,48 +161,65 @@ func (m *Repository) ShortenURL(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("SHORTKEY -->", shortKey)
 
-	err := m.DB.InsertIntoShortUrlMap(shortKey, request.LongURL)
-	if err != nil {
-		resp := jsonResponse{
-			OK:      false,
-			Message: err.Error(),
-		}
+	baseUrl := "https://quiklink.site/" //PROD
+	//baseUrl := "http://localhost:8080/" //DEV
 
-		w.Header().Set("Content-Type", "application/json")
-		err := json.NewEncoder(w).Encode(resp)
+	errChan := make(chan error)
+	defer close(errChan)
+
+	go func() {
+		errChan <- m.DB.InsertIntoShortUrlMap(shortKey, request.LongURL)
+	}()
+
+	qrCodeChan := make(chan []byte)
+	defer close(qrCodeChan)
+
+	go func() {
+		code, err := generateQRCode(baseUrl + shortKey)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			log.Println(err)
+			qrCodeChan <- []byte{}
+			return
 		}
+		qrCodeChan <- code
+	}()
+
+	dbErr := <-errChan
+	qrCode := <-qrCodeChan
+
+	if dbErr != nil {
+		respondWithError(w, dbErr.Error(), http.StatusBadRequest)
 		return
-	}
-
-	//shortUrl := "http://localhost:8080/" + shortKey //DEV
-	//shortUrl := "https://ec2-18-144-176-134.us-west-1.compute.amazonaws.com/" + shortKey //REVERSE DNS
-	shortUrl := "https://quiklink.site/" + shortKey //PROD
-
-	code, err := generateQRCode(shortUrl)
-	if err != nil {
-		log.Println(err)
 	}
 
 	response := jsonResponse{
 		OK:       true,
 		Message:  "Short URL created",
 		LongURL:  request.LongURL,
-		ShortURL: shortUrl,
-		QRCode:   code,
+		ShortURL: baseUrl + shortKey,
+		QRCode:   qrCode,
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	respondWithJSON(w, response, http.StatusOK)
 }
 
 // Redirect redirects the short URL to the original long URL.
 func (m *Repository) Redirect(w http.ResponseWriter, r *http.Request) {
 	shortKey := chi.URLParam(r, "shortKey")
-	longURL, err := m.DB.GetLongUrlFromShort(shortKey)
 
-	if err != nil || longURL == "" {
+	longUrlChan, errChan := make(chan string), make(chan error)
+	defer close(longUrlChan)
+	defer close(errChan)
+
+	go func() {
+		longURL, err := m.DB.GetLongUrlFromShort(shortKey)
+		longUrlChan <- longURL
+		errChan <- err
+	}()
+
+	longUrlDB, dbErr := <-longUrlChan, <-errChan
+
+	if dbErr != nil || longUrlDB == "" {
 		stringMap := make(map[string]string)
 		stringMap["url_not_found"] = "url_not_found"
 		_ = render.TemplateRenderer(w, r, "home.page.tmpl", &models.TemplateData{
@@ -214,27 +228,5 @@ func (m *Repository) Redirect(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, longURL, http.StatusSeeOther)
-}
-
-func generateQRCode(url string) ([]byte, error) {
-	data := url
-	code, err := qrcode.Encode(data, qrcode.Medium, 256)
-	if err != nil {
-		log.Printf("Error generating QR code: %v", err)
-		return nil, err
-	}
-
-	return code, nil
-}
-
-// RandomString Generates a random string
-func randomString(length int) string {
-	rand.Seed(time.Now().UnixNano())
-	characters := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-	result := make([]byte, length)
-	for i := 0; i < length; i++ {
-		result[i] = characters[rand.Intn(len(characters))]
-	}
-	return string(result)
+	http.Redirect(w, r, longUrlDB, http.StatusSeeOther)
 }
