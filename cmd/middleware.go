@@ -2,6 +2,7 @@ package main
 
 import (
 	"Quiklink_BE/internal/helpers"
+	gh "github.com/gorilla/handlers"
 	"github.com/justinas/nosurf"
 	"net/http"
 )
@@ -34,4 +35,13 @@ func Auth(next http.Handler) http.Handler {
 		}
 		next.ServeHTTP(w, r)
 	})
+}
+
+func CorsHandler(next http.Handler) http.Handler {
+	cors := gh.CORS(
+		gh.AllowedOrigins([]string{"*"}),            // Allow all origins
+		gh.AllowedMethods([]string{"GET", "POST"}),  // Allow only specified methods
+		gh.AllowedHeaders([]string{"Content-Type"}), // Allow only specified headers
+	)
+	return cors(next)
 }

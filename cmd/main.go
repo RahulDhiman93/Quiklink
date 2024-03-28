@@ -8,12 +8,13 @@ import (
 	"Quiklink_BE/internal/models"
 	"Quiklink_BE/internal/render"
 	"encoding/gob"
-	"flag"
 	"fmt"
 	"github.com/alexedwards/scs/v2"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -52,26 +53,29 @@ func run() (*driver.DB, error) {
 	gob.Register(models.AuthRequestBody{})
 	gob.Register(map[string]int{})
 
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	//read flags
-	inProduction := flag.Bool("production", false, "Application is in prod")
-	useCache := flag.Bool("cache", true, "Use template cache")
-	dbName := flag.String("dbname", "", "Database name")
-	dbHost := flag.String("dbhost", "", "Database host")
-	dbUser := flag.String("dbuser", "", "Database user")
-	dbPass := flag.String("dbpass", "", "Database pass")
-	dbPort := flag.String("dbport", "", "Database port")
-	dbSSL := flag.String("dbssl", "disable", "Database SSL settings (disable, prefer, require)")
+	inProduction, _ := strconv.ParseBool(os.Getenv("IN_PRODUCTION"))
+	useCache, _ := strconv.ParseBool(os.Getenv("USE_CACHE"))
+	dbName := os.Getenv("DBNAME")
+	dbHost := os.Getenv("DBHOST")
+	dbUser := os.Getenv("DBUSER")
+	dbPass := os.Getenv("DBPASS")
+	dbPort := os.Getenv("DBPORT")
+	dbSSL := os.Getenv("DBSSL")
 
-	flag.Parse()
-
-	if *dbName == "" || *dbUser == "" {
+	if dbName == "" || dbUser == "" {
 		fmt.Println("Missing required flags")
 		os.Exit(1)
 	}
 
 	//change to true for Production
-	app.InProduction = *inProduction
-	app.UseCache = *useCache
+	app.InProduction = inProduction
+	app.UseCache = useCache
 
 	//Info Log setup
 	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
@@ -91,18 +95,17 @@ func run() (*driver.DB, error) {
 
 	//Connect to DB
 	log.Println("<<<-- Connecting to DB")
-	connectionString := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s", *dbHost, *dbPort, *dbName, *dbUser, *dbPass, *dbSSL)
+	connectionString := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s", dbHost, dbPort, dbName, dbUser, dbPass, dbSSL)
 	log.Println(connectionString)
 	db, err := driver.ConnectSQL(connectionString)
 	if err != nil {
 		log.Fatal("Cannot connect to DB, dying!!!...")
-		return nil, err
 	}
 	log.Println("Connected to DB -->>>")
 
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
-		return db, err
+		return nil, err
 	}
 
 	app.TemplateCache = tc
