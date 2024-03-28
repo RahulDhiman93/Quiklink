@@ -1,0 +1,28 @@
+FROM golang:latest
+
+RUN if ! command -v soda &> /dev/null; then \
+        echo "Installing SODA" \
+        && go install github.com/gobuffalo/pop/v6/soda@latest \
+        ; \
+    else \
+        echo "SODA is already installed." \
+        ; \
+    fi
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+WORKDIR /app
+
+COPY . .
+
+RUN soda migrate -e "development"
+
+RUN chmod +x run.sh
+
+EXPOSE 8080
+
+CMD ["sh", "run.sh"]

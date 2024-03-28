@@ -4,16 +4,23 @@ services:
   quiklink_app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     image: quiklink-docker
-    container_name: quiklink_app
-    platform: linux/amd64
     volumes:
-      - ./:/usr/src/app
+      - .:/app
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     tty: true
 
-volumes:
-  data:
-    driver: local
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: quiklink-docker-test
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    command: ["go", "test", "-v", "./..."]
