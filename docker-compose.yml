@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+  quiklink_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: quiklink-app
+    image: quiklink-docker
+    hostname: quiklink-app
+    networks:
+      - qlink
+    volumes:
+      - .:/var/www/app
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    tty: true
+
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: quiklink-app-test
+    image: quiklink-docker-test
+    volumes:
+      - .:/var/www/app
+    env_file:
+      - .env
+    command: [ "go", "test", "-v", "./..." ]
+
+  caddy-lb:
+    networks:
+      - qlink
+    image: caddy:2-alpine
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./quiklink.conf:/etc/caddy/quiklink.conf
+    depends_on:
+      - quiklink_app
+    ports:
+      - "80:80"
+      - "443:443"
+
+
+networks:
+  qlink:
