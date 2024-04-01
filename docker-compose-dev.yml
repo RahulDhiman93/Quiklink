@@ -4,7 +4,7 @@ services:
   quiklink_app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: quiklink-app
     image: quiklink-docker
     hostname: quiklink-app
@@ -16,6 +16,18 @@ services:
       - .env
     tty: true
 
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: quiklink-app-test
+    image: quiklink-docker-test
+    volumes:
+      - .:/var/www/app
+    env_file:
+      - .env
+    command: [ "go", "test", "-v", "./..." ]
+
   caddy:
     networks:
       - qlink
@@ -26,8 +38,6 @@ services:
     depends_on:
       - quiklink_app
     ports:
-      - "80:80"
-      - "443:443"
       - "8081:80"
 
 

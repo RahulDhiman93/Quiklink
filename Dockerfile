@@ -1,18 +1,10 @@
 FROM golang:latest AS builder
-
-WORKDIR /app
+WORKDIR /var/www/app
 COPY go.mod go.sum ./
-
 RUN go mod download
-
+WORKDIR /var/www/app
 COPY . .
-
-WORKDIR /app
-
-COPY . .
-
-RUN chmod +x prod.sh
-
+RUN chmod +x run.sh
 EXPOSE 8080
+CMD ["sh", "run.sh"]
 
-CMD ["sh", "prod.sh"]
