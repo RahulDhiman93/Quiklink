@@ -11,7 +11,7 @@ services:
     networks:
       - qlink
     volumes:
-      - .:/var/www/app
+      - .:/app
     env_file:
       - .env
     tty: true
@@ -21,8 +21,8 @@ services:
       - qlink
     image: caddy:latest
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - ./quiklink.conf:/etc/caddy/quiklink.conf
+      - ./conf-files/Caddyfile:/etc/caddy/Caddyfile
+      - ./conf-files/quiklink.conf:/etc/caddy/quiklink.conf
     depends_on:
       - quiklink_app
     ports:
