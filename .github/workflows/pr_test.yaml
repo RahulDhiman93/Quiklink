@@ -11,6 +11,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      IN_PRODUCTION: 'true'
+      USE_CACHE: 'true'
+      DBHOST: ${{ secrets.DBHOST }}
+      DBPORT: '5432'
+      DBNAME: 'Quiklink_BE'
+      DBUSER: 'postgres'
+      DBPASS: ${{ secrets.DBPASS }}
+      DBSSL: 'prefer'
+
     steps:
       - uses: actions/checkout@v3
 
