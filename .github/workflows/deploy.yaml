@@ -45,7 +45,7 @@ jobs:
 
       - name: Build
         run: |-
-          docker build -t rahuldhiman93/quiklink-prod:latest -t rahuldhiman93/quiklink-prod:${{ env.SHA }} -f ./
+          docker build -t rahuldhiman93/quiklink-prod:latest -t rahuldhiman93/quiklink-prod:${{ env.SHA }} -f .
 
       - name: Push
         run: |-
