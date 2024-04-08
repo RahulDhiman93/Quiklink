@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      component: web
+  template:
+    metadata:
+      labels:
+        component: web
+    spec:
+      containers:
+        - name: client
+          image: rahuldhiman93/quiklink-prod
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "IN_PRODUCTION"
+              value: "true"
+            - name: "USE_CACHE"
+              value: "true"
+            - name: "DBPORT"
+              value: "5432"
+            - name: "DBNAME"
+              value: "Quiklink_BE"
+            - name: "DBUSER"
+              value: "postgres"
+            - name: "DBSSL"
+              value: "prefer"
+            - name: "DBHOST"
+              valueFrom:
+                secretKeyRef:
+                  name: "dbhost"
+                  key: "DBHOST"
+            - name: "DBPASS"
+              valueFrom:
+                secretKeyRef:
+                  name: "dbpass"
+                  key: "DBPASS"
