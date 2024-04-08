@@ -5,6 +5,16 @@ metadata:
 spec:
   ingressClassName: caddy
   rules:
+    - host: quiklink.site
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: client-cluster-ip-service
+                port:
+                  number: 8080
     - host: localhost
       http:
         paths:
