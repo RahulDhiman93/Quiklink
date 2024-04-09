@@ -99,21 +99,21 @@ func (m *postgresDBRepo) LoginUser(email, password string) (models.User, error) 
 	return user, nil
 }
 
-func (m *postgresDBRepo) InsertIntoShortUrlMap(shortURL, longURL string) error {
+func (m *postgresDBRepo) InsertIntoShortUrlMap(shortKey, longURL string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	if exists, err := m.shortURLExists(ctx, shortURL); err != nil {
+	if exists, err := m.shortURLExists(ctx, shortKey); err != nil {
 		return err
 	} else if exists {
-		return fmt.Errorf("shortURL %s already exists", shortURL)
+		return fmt.Errorf("shortURL %s already exists", shortKey)
 	}
 
 	query := `insert into short_url_map (short_url, long_url, created_at, updated_at)
               values ($1, $2, $3, $4)`
 
 	_, err := m.DB.ExecContext(ctx, query,
-		shortURL,
+		shortKey,
 		longURL,
 		time.Now(),
 		time.Now(),
@@ -126,11 +126,11 @@ func (m *postgresDBRepo) InsertIntoShortUrlMap(shortURL, longURL string) error {
 	return nil
 }
 
-func (m *postgresDBRepo) shortURLExists(ctx context.Context, shortURL string) (bool, error) {
+func (m *postgresDBRepo) shortURLExists(ctx context.Context, shortKey string) (bool, error) {
 	query := "select exists (select 1 from short_url_map where short_url = $1)"
 
 	var exists bool
-	err := m.DB.QueryRowContext(ctx, query, shortURL).Scan(&exists)
+	err := m.DB.QueryRowContext(ctx, query, shortKey).Scan(&exists)
 	if err != nil {
 		return false, err
 	}
@@ -139,7 +139,7 @@ func (m *postgresDBRepo) shortURLExists(ctx context.Context, shortURL string) (b
 }
 
 // GetLongUrlFromShort gets a long url from short
-func (m *postgresDBRepo) GetLongUrlFromShort(shortURL string) (string, error) {
+func (m *postgresDBRepo) GetLongUrlFromShort(shortKey string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -147,7 +147,7 @@ func (m *postgresDBRepo) GetLongUrlFromShort(shortURL string) (string, error) {
 
 	query := `select long_url from short_url_map where short_url = $1`
 
-	row := m.DB.QueryRowContext(ctx, query, shortURL)
+	row := m.DB.QueryRowContext(ctx, query, shortKey)
 	err := row.Scan(
 		&longURL,
 	)
