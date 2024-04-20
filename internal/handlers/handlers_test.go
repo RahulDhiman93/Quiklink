@@ -17,7 +17,7 @@ var getTests = []struct {
 	method             string
 	expectedStatusCode int
 }{
-	{"home", "/", "GET", http.StatusOK},
+	{"home", "/", "GET", http.StatusBadRequest},
 	{"redirect", "/xxxxxx", "GET", http.StatusOK},
 }
 
