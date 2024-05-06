@@ -27,7 +27,7 @@ spec:
             - name: "DBNAME"
               value: "Quiklink_BE"
             - name: "DBUSER"
-              value: "postgres"
+              value: "postgres.qpzeyjkejgkwzeihilwx"
             - name: "DBSSL"
               value: "prefer"
             - name: "DBHOST"
