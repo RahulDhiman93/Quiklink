@@ -31,7 +31,7 @@ jobs:
       - name: Set Project
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: lunar-analyzer-419703
+          project_id: quiklink-428319
 
       - name: Auth
         run: |-
