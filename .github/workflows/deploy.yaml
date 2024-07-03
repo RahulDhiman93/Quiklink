@@ -25,8 +25,8 @@ jobs:
       - name: Set Identity Provider
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: 'projects/747066053502/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-          service_account: 'qlink-deploy@lunar-analyzer-419703.iam.gserviceaccount.com'
+          workload_identity_provider: 'projects/159445549550/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+          service_account: 'qlink-deploy@quiklink-428319.iam.gserviceaccount.com'
 
       - name: Set Project
         uses: google-github-actions/setup-gcloud@v2
