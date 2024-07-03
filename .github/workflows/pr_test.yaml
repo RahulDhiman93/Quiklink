@@ -17,7 +17,7 @@ jobs:
       DBHOST: ${{ secrets.DBHOST }}
       DBPORT: '5432'
       DBNAME: 'Quiklink_BE'
-      DBUSER: 'postgres'
+      DBUSER: 'postgres.qpzeyjkejgkwzeihilwx'
       DBPASS: ${{ secrets.DBPASS }}
       DBSSL: 'prefer'
 
