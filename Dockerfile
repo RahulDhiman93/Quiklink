@@ -6,5 +6,5 @@ WORKDIR /app
 COPY . .
 RUN go build -o Quiklink_App cmd/*.go
 RUN chmod +x ./Quiklink_App
-EXPOSE 8080 2222
-CMD ["./Quiklink_App"]
+EXPOSE 8080
+ENTRYPOINT ["./Quiklink_App"]
