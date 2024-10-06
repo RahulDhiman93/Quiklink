@@ -26,6 +26,12 @@ jobs:
         username: ${{ secrets.AzureAppService_ContainerUsername_d42937595e9c4ebd83ba3b78056a2306 }}
         password: ${{ secrets.AzureAppService_ContainerPassword_1e20b985345e4df3ac1564611551859f }}
 
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.AzureAppService_ContainerUsername_d42937595e9c4ebd83ba3b78056a2306 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_1e20b985345e4df3ac1564611551859f }}
+
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
