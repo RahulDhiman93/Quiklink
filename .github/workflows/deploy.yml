@@ -25,7 +25,7 @@ jobs:
       - name: Set Identity Provider
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: 'projects/159445549550/locations/global/workloadIdentityPools/qlink-pool/providers/qlink-provider'
+          workload_identity_provider: 'projects/234640484205/locations/global/workloadIdentityPools/qlink-pool/providers/qlink-provider'
           service_account: 'qlink-deploy@quiklink-428319.iam.gserviceaccount.com'
 
       - name: Set Project
