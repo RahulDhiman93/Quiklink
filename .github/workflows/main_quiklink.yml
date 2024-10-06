@@ -30,7 +30,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: docker.io/${{ secrets.AzureAppService_ContainerUsername_09350e2768134a50a32aeb8d3625fa02 }}/rahuldhiman93/quiklink-prod:${{ github.sha }}
+        tags: docker.io/${{ secrets.AzureAppService_ContainerUsername_09350e2768134a50a32aeb8d3625fa02 }}/quiklink-prod:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
