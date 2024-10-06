@@ -1,0 +1,51 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy container app to Azure Web App - quiklink
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to registry
+      uses: docker/login-action@v2
+      with:
+        registry: https://index.docker.io/v1/
+        username: ${{ secrets.AzureAppService_ContainerUsername_09350e2768134a50a32aeb8d3625fa02 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_3e03374d1af641f1b394f808153c7a95 }}
+
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_09350e2768134a50a32aeb8d3625fa02 }}/rahuldhiman93/quiklink-prod:${{ github.sha }}
+        file: ./Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'quiklink'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_407fe50e6fb64e77af515eced8d52150 }}
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_09350e2768134a50a32aeb8d3625fa02 }}/rahuldhiman93/quiklink-prod:${{ github.sha }}'
