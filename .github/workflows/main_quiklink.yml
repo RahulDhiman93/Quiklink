@@ -48,6 +48,9 @@ jobs:
         username: ${{ secrets.AzureAppService_ContainerUsername_148fa2536f854decb710b5805c28d9b5 }}
         password: ${{ secrets.AzureAppService_ContainerPassword_b73ee184edea465eaeaba1c1304bd74c }}
 
+    - name: Pull Docker image
+      run: docker pull rahuldhiman93/quiklink-prod:latest
+
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
@@ -55,4 +58,4 @@ jobs:
         app-name: 'quiklink'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_0b4137a7e67648e9a81d2f653633a6f4 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_148fa2536f854decb710b5805c28d9b5 }}/rahuldhiman93/quiklink-prod:latest'
+        images: 'rahuldhiman93/quiklink-prod:latest'
