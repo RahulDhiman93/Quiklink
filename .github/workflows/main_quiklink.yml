@@ -23,20 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://index.docker.io/v1/
-        username: ${{ secrets.AzureAppService_ContainerUsername_d42937595e9c4ebd83ba3b78056a2306 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_1e20b985345e4df3ac1564611551859f }}
-
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.AzureAppService_ContainerUsername_d42937595e9c4ebd83ba3b78056a2306 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_1e20b985345e4df3ac1564611551859f }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_148fa2536f854decb710b5805c28d9b5 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_b73ee184edea465eaeaba1c1304bd74c }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_d42937595e9c4ebd83ba3b78056a2306 }}/rahuldhiman93/quiklink-prod:${{ github.sha }}
+        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_148fa2536f854decb710b5805c28d9b5 }}/rahuldhiman93/quiklink-prod:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -53,5 +47,5 @@ jobs:
       with:
         app-name: 'quiklink'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_2f91057beaf04729891f73075569cd3d }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_d42937595e9c4ebd83ba3b78056a2306 }}/rahuldhiman93/quiklink-prod:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_0b4137a7e67648e9a81d2f653633a6f4 }}
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_148fa2536f854decb710b5805c28d9b5 }}/rahuldhiman93/quiklink-prod:${{ github.sha }}'
