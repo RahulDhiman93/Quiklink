@@ -18,13 +18,6 @@ jobs:
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
-
-    - name: Log in to registry
-      uses: docker/login-action@v2
-      with:
-        registry: https://index.docker.io/v1/
-        username: ${{ secrets.AzureAppService_ContainerUsername_148fa2536f854decb710b5805c28d9b5 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_b73ee184edea465eaeaba1c1304bd74c }}
     
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
@@ -56,4 +49,4 @@ jobs:
         app-name: 'quiklink'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_0b4137a7e67648e9a81d2f653633a6f4 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_148fa2536f854decb710b5805c28d9b5 }}/rahuldhiman93/quiklink-prod:${{ github.sha }}'
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_148fa2536f854decb710b5805c28d9b5 }}/rahuldhiman93/quiklink-prod:latest'
