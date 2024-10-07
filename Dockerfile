@@ -7,4 +7,4 @@ COPY . .
 RUN go build -o Quiklink_App cmd/*.go
 RUN chmod +x ./Quiklink_App
 EXPOSE 8080
-ENTRYPOINT ["./Quiklink_App"]
+CMD ["./Quiklink_App"]
